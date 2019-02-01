@@ -7,8 +7,6 @@ var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 var cors = require('cors')
 
-
-
 var status = process.env.NODE_ENV || 'dev'
 mongoose.connect(`mongodb://localhost/activoverflow-${status}`);
 var db = mongoose.connection;

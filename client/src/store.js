@@ -378,13 +378,18 @@ export default new Vuex.Store({
           console.log(response)
         })
     },
-    fetchJobStreet ({ commit }) {
-      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=javascript`)
+    fetchJobStreet ({ commit }, payload) {
+      console.log(payload)
+      var keywoard = ''
+      if (payload.length > 0) {
+        var indexMe = Math.floor(Math.random() * Math.floor(payload.length))
+        keywoard = payload[indexMe].name
+      }
+
+      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${keywoard}`)
         .then(({ data }) => {
-          var indexJob = Math.floor(Math.random() * Math.floor(data.length))
-          var newJob = data.slice(indexJob, 5)
-          // console.log(newJob)
-          commit('mutationJob', newJob)
+          console.log(data, 'job')
+          commit('mutationJob', data)
         })
         .catch(({ response }) => {
           console.log(response)

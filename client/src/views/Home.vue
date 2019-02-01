@@ -4,8 +4,8 @@
       <div class="col-md-2">
         <Navigation style="top: 10%"> </Navigation>
       </div>
-      <div class="col-md-7 d-flex flex-column">
-         <v-tabs right>
+      <div class="col-md-7 d-flex flex-column align-self-start">
+         <v-tabs>
             <v-tab @click="fetchQuestions">All Questions </v-tab>
             <v-tab v-if="isLogin" @click="fetchWatchedQuestions">Watch </v-tab>
           </v-tabs>
@@ -14,7 +14,7 @@
 
       <div class="col-md-3 d-flex flex-column align-self-start">
         <WatchTag v-if="isLogin"> </WatchTag>
-        <Job class="mt-4" :my-watch="myWatchs"> </Job>
+        <Job class="mt-4"> </Job>
       </div>
     </div>
     <v-btn
