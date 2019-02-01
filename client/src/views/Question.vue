@@ -24,7 +24,7 @@
 <script>
 import Navigation from '@/components/Navigation.vue'
 import Ask from '@/components/Ask.vue'
-import { mapActions, mapState } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Home',

@@ -7,10 +7,18 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+const kue = require('kue')
+const queue = kue.createQueue()
+var {nodemailer} = require('../helpers/index')
 
 /**
  * Get port from environment and store in Express.
  */
+
+kue.app.listen(4001)
+queue.process('email', function (job, done) {
+  nodemailer(job.data.email, { header: job.data.title, main: job.data.template }, done)
+})
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);

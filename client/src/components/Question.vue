@@ -44,7 +44,6 @@ import Swal from 'sweetalert2'
 export default {
   props: ['question'],
   mounted () {
-    console.log(this.question)
   },
   data () {
     return {

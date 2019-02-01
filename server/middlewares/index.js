@@ -7,7 +7,6 @@ module.exports = {
     Authentication : function(req, res, next){
         // console.log(req.headers.token)
         let {id} = verify(req.headers.token)
-        console.log(id,"====")
         User.findOne({_id : id}, function(err, data){
             if(err){
                 res.status(400).json(err)

@@ -7,11 +7,20 @@
 
 <script>
 import Navbar from './components/Navbar'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
+  created () {
+    this.fetchMyWatchTag()
+  },
   components: {
     Navbar
+  },
+  methods: {
+    ...mapActions([
+      'fetchMyWatchTag'
+    ])
   },
   data () {
     return {

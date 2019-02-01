@@ -13,7 +13,9 @@ export default new Vuex.Store({
     errorMessage: '',
     questions: [],
     listTags: [],
-    question: ''
+    question: '',
+    myWatchs: [],
+    jobs: []
   },
   mutations: {
     mutationLogin (state, payload) {
@@ -80,6 +82,12 @@ export default new Vuex.Store({
           obj.upVote = payload.upVote
         }
       })
+    },
+    mutationMyWatch (state, payload) {
+      state.myWatchs = payload
+    },
+    mutationJob (state, payload) {
+      state.jobs = payload
     }
   },
   actions: {
@@ -92,6 +100,7 @@ export default new Vuex.Store({
       }
     },
     doLogin ({ commit, dispatch }, data) {
+      // console.log(data, 'albnajkvkja')
       axios.post('/login', data)
         .then(({ data }) => {
           console.log('data:', data)
@@ -101,7 +110,7 @@ export default new Vuex.Store({
           commit('mutationMessage', { snackbar: true, message: `Successfully login`, color: 'success' })
         })
         .catch(({ response: { data } }) => {
-          // console.log(data, '------')
+          console.log(data, '------')
           commit('mutationMessage', { snackbar: true, message: `Oops! Something wrong. ${data.message}`, color: 'error' })
           console.log(data.message)
         })
@@ -130,7 +139,7 @@ export default new Vuex.Store({
       }
       })
         .then(({ data }) => {
-          console.log(data)
+          // console.log(data)
           data.forEach(question => {
             question.createdAt = moment(new Date(question.createdAt)).fromNow()
           })
@@ -256,59 +265,129 @@ export default new Vuex.Store({
         })
     },
     upVoteQuestion ({ commit }, payload) {
-      axios.get(`/questions/upvote/${payload}`, { headers: {
-        token: localStorage.getItem('token')
+      if (localStorage.getItem('token')) {
+        axios.get(`/questions/upvote/${payload}`, { headers: {
+          token: localStorage.getItem('token')
+        }
+        })
+          .then(({ data }) => {
+            console.log(data, 'udahupvote')
+            commit('mutationUpVoteQuestion', data.result)
+          })
+          .catch(({ response }) => {
+            commit('mutationMessage', { snackbar: true, message: `Oops! ${response.data.message}`, color: 'error' })
+            console.log(response)
+          })
+      } else {
+        commit('mutationMessage', { snackbar: true, message: `Please login first`, color: 'warning' })
       }
-      })
-        .then(({ data }) => {
-          console.log(data, 'udahupvote')
-          commit('mutationUpVoteQuestion', data.result)
-        })
-        .catch(({ response }) => {
-          commit('mutationMessage', { snackbar: true, message: `Oops! ${response.data.message}`, color: 'error' })
-          console.log(response)
-        })
     },
     downVoteQuestion ({ commit }, payload) {
-      axios.get(`/questions/downvote/${payload}`, { headers: {
-        token: localStorage.getItem('token')
+      if (localStorage.getItem('token')) {
+        axios.get(`/questions/downvote/${payload}`, { headers: {
+          token: localStorage.getItem('token')
+        }
+        })
+          .then(({ data }) => {
+            console.log(data, 'udagDownvote')
+            commit('mutationDownVoteQuestion', data.result)
+          })
+          .catch(({ response }) => {
+            console.log(response)
+          })
+      } else {
+        commit('mutationMessage', { snackbar: true, message: `Please login first`, color: 'warning' })
       }
-      })
-        .then(({ data }) => {
-          console.log(data, 'udagDownvote')
-          commit('mutationDownVoteQuestion', data.result)
-        })
-        .catch(({ response }) => {
-          console.log(response)
-        })
     },
     upVoteAnswer ({ commit }, payload) {
-      axios.get(`/answers/upvote/${payload}`, { headers: {
-        token: localStorage.getItem('token')
+      if (localStorage.getItem('token')) {
+        axios.get(`/answers/upvote/${payload}`, { headers: {
+          token: localStorage.getItem('token')
+        }
+        })
+          .then(({ data }) => {
+            console.log(data, 'udahupvote')
+            commit('mutationUpVoteAnswer', data.result)
+          })
+          .catch(({ response }) => {
+            console.log(response)
+            commit('mutationMessage', { snackbar: true, message: `Oops! ${response.data.message}`, color: 'error' })
+            console.log(response)
+          })
+      } else {
+        commit('mutationMessage', { snackbar: true, message: `Please login first`, color: 'warning' })
       }
+    },
+    downVoteAnswer ({ commit }, payload) {
+      if (localStorage.getItem('token')) {
+        axios.get(`/answers/downvote/${payload}`, { headers: {
+          token: localStorage.getItem('token')
+        }
+        })
+          .then(({ data }) => {
+            console.log(data, 'udahdownvote')
+            commit('mutationDownVoteAnswer', data.result)
+          })
+          .catch(({ response }) => {
+            console.log(response)
+            commit('mutationMessage', { snackbar: true, message: `Oops! ${response.data.message}`, color: 'error' })
+          })
+      } else {
+        commit('mutationMessage', { snackbar: true, message: `Please login first`, color: 'warning' })
+      }
+    },
+    addWatchTag ({ commit }, payload) {
+      axios.post(`users/watch`, payload, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
       })
         .then(({ data }) => {
-          console.log(data, 'udahupvote')
-          commit('mutationUpVoteAnswer', data.result)
+          // console.log(data, 'udah di create')
+          commit('mutationMyWatch', data.watchTags)
         })
         .catch(({ response }) => {
-          console.log(response)
-          commit('mutationMessage', { snackbar: true, message: `Oops! ${response.data.message}`, color: 'error' })
           console.log(response)
         })
     },
-    downVoteAnswer ({ commit }, payload) {
-      axios.get(`/answers/downvote/${payload}`, { headers: {
-        token: localStorage.getItem('token')
-      }
+    deleteWatchTag ({ commit }, payload) {
+      axios.delete(`users/watch/${payload}`, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
       })
         .then(({ data }) => {
-          console.log(data, 'udahdownvote')
-          commit('mutationDownVoteAnswer', data.result)
+          console.log(data, 'udah di delete')
+          commit('mutationMyWatch', data.watchTags)
         })
         .catch(({ response }) => {
           console.log(response)
-          commit('mutationMessage', { snackbar: true, message: `Oops! ${response.data.message}`, color: 'error' })
+        })
+    },
+    fetchMyWatchTag ({ commit }) {
+      axios.get('/users/watch', {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
+        .then(({ data }) => {
+          // console.log(data)
+          commit('mutationMyWatch', data)
+        })
+        .catch(({ response }) => {
+          console.log(response)
+        })
+    },
+    fetchJobStreet ({ commit }) {
+      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=javascript`)
+        .then(({ data }) => {
+          var indexJob = Math.floor(Math.random() * Math.floor(data.length))
+          var newJob = data.slice(indexJob, 5)
+          // console.log(newJob)
+          commit('mutationJob', newJob)
+        })
+        .catch(({ response }) => {
+          console.log(response)
         })
     }
   }

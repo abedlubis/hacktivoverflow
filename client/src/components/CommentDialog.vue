@@ -1,6 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600px">
-        <v-btn class="md-subhead" slot="activator" flat color="secondary" small dark>Comment</v-btn>
+        <v-btn v-if="isLogin" class="md-subhead" slot="activator" flat color="secondary" small dark>Comment</v-btn>
+        <v-btn v-else class="md-subhead" flat color="secondary" slot="activator" small dark to="/users/login">Comment</v-btn>
         <v-card>
             <v-card-title>
                 <span class="headline">Give comment</span>
@@ -27,17 +28,27 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
+
 export default {
   props: ['question-id'],
+  mounted () {
+    this.checkLogin()
+  },
   data () {
     return {
       dialog: false,
       message: ''
     }
   },
+  computed: {
+    ...mapState([
+      'isLogin'
+    ])
+  },
   methods: {
     ...mapActions([
+      'checkLogin',
       'doComment'
     ]),
     handleComment () {

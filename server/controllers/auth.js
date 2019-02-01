@@ -1,8 +1,16 @@
 const User = require('../models/user')
 const {compare, sign} = require('../helpers/index')
+const kue = require('kue')
+const queue = kue.createQueue()
+
+// const {nodemailer} = require('../helpers/index.js')
+// queue.process('email', function (job, done) {
+//     nodemailer(job.data.email, { header: job.data.title, main: job.data.template }, done)
+// })
 
 module.exports = {
     login : function(req, res){
+        // console.log(req.body)
         User.findOne({email: req.body.email})
         .then(user =>{
             if(user){
@@ -43,6 +51,11 @@ module.exports = {
             lastName : req.body.lastName
         })
         .then(user =>{
+            queue.create('email', {
+                title: `Welcome to ActiveOverflow!`,
+                email: user.email,
+                template: `<h1> Welcome ${user.firstName}, Thanks for Register to our website!</h1>`
+            }).save()
             res.status(201).json({
                     data: user,
                     message: 'User created'

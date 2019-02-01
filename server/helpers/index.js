@@ -16,7 +16,8 @@ module.exports = {
     verify: function(token){
         return jwt.verify(token, process.env.JWT_SECRET)
     },
-    nodemailer : function(params, done){
+    nodemailer : function(receiver, content, done){
+        console.log("masuk sini jing")
         var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -27,9 +28,9 @@ module.exports = {
     
         var mailOptions = {
         from: process.env.userNodemailer,
-        to: params.data.recipient,
-        subject: `Welcome ${params.data.name}, HacktivOverflow Message`,
-        text: 'Thank you for join HacktivOverflow'
+        to: receiver,
+        subject: content.header,
+        html: content.main
         };
     
         transporter.sendMail(mailOptions, function(error, info){

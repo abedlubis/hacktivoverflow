@@ -35,7 +35,22 @@ var userSchema = new Schema({
     popularity : {
         type: Number,
         default: 0
-    }
+    },
+    watchTags: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Tag',
+        default: []
+    }]
+})
+userSchema.post('save', function(doc, next) {
+    doc.populate('watchTags').execPopulate().then(function() {
+        next();
+    });
+})
+userSchema.post('findOneAndUpdate', function(doc, next) {
+    doc.populate('watchTags').execPopulate().then(function() {
+        next();
+    });
 })
 
 userSchema.pre('save', function(next){

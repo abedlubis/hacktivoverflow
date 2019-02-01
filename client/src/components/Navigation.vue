@@ -1,6 +1,6 @@
 <template>
     <v-navigation-drawer width="200" height="100%" fixed class="blue lighten-1"
-        dark 
+        dark
         permanent>
         <v-list dense class="pt-0">
             <v-list-tile>
@@ -39,25 +39,25 @@
 
 <script>
 export default {
-    data() {
-        return {
-            items: [
-                { title: 'Home', icon: 'dashboard' },
-                { title: 'About', icon: 'question_answer' }
-            ],
-            right: null,
-            admins: [
-                ['Management', 'people_outline'],
-                ['Settings', 'settings']
-            ],
-            cruds: [
-                ['Create', 'add'],
-                ['Read', 'insert_drive_file'],
-                ['Update', 'update'],
-                ['Delete', 'delete']
-            ]
-        }
-    },
+  data () {
+    return {
+      items: [
+        { title: 'Home', icon: 'dashboard' },
+        { title: 'About', icon: 'question_answer' }
+      ],
+      right: null,
+      admins: [
+        ['Management', 'people_outline'],
+        ['Settings', 'settings']
+      ],
+      cruds: [
+        ['Create', 'add'],
+        ['Read', 'insert_drive_file'],
+        ['Update', 'update'],
+        ['Delete', 'delete']
+      ]
+    }
+  }
 }
 </script>
 

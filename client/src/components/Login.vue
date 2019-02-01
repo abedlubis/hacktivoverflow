@@ -63,72 +63,72 @@ import { mapState, mapActions } from 'vuex'
 import Alert from '@/components/alertMessage'
 
 export default {
-    mixins: [validationMixin],
-    validations: {
-      password: { required},
-      email: { required, email }
+  mixins: [validationMixin],
+  validations: {
+    password: { required },
+    email: { required, email }
+  },
+  mounted () {
+    this.checkLogin()
+    if (this.isLogin === true) {
+      this.$router.push('/')
+    }
+  },
+  data: () => ({
+    formHasErrors: false,
+    email: '',
+    password: ''
+  }),
+  components: {
+    Alert
+  },
+  computed: {
+    ...mapState([
+      'isLogin'
+    ]),
+    passwordErrors () {
+      const errors = []
+      if (!this.$v.password.$dirty) return errors
+      !this.$v.password.required && errors.push('Password is required.')
+      return errors
     },
-    mounted() {
-        this.checkLogin()
-        if(this.isLogin == true){
-            this.$router.push('/')
-        }
+    emailErrors () {
+      const errors = []
+      if (!this.$v.email.$dirty) return errors
+      !this.$v.email.email && errors.push('Must be valid e-mail')
+      !this.$v.email.required && errors.push('E-mail is required')
+      return errors
+    }
+  },
+  watch: {
+    isLogin (val) {
+      if (val === true) {
+        this.$router.push('/')
+      }
+    }
+  },
+  methods: {
+    ...mapActions([
+      'checkLogin',
+      'doLogin'
+    ]),
+    handleLogin () {
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        this.doLogin({ email: this.email, password: this.password })
+        this.clear()
+      } else {
+        this.formHasErrors = true
+      }
     },
-    data: () => ({
-        formHasErrors: false,
-        email: '',
-        password: ''
-    }),
-    components:{
-        Alert
-    },
-    computed: {
-        ...mapState([
-            'isLogin'
-        ]),
-        passwordErrors () {
-            const errors = []
-            if (!this.$v.password.$dirty) return errors
-            !this.$v.password.required && errors.push('Password is required.')
-            return errors
-        },
-        emailErrors () {
-            const errors = []
-            if (!this.$v.email.$dirty) return errors
-            !this.$v.email.email && errors.push('Must be valid e-mail')
-            !this.$v.email.required && errors.push('E-mail is required')
-            return errors
-        }
-    },
-    watch: {
-        isLogin(val){
-            if(val == true){
-                this.$router.push('/')
-            }
-        }
-    },
-    methods: {
-        ...mapActions([
-            'checkLogin',
-            'doLogin'
-        ]),
-        handleLogin () {
-            this.$v.$touch()
-            if (!this.$v.$invalid){
-                this.doLogin({email : this.email, password: this.password})
-                this.clear()
-            }else{
-                this.formHasErrors = true
-            }
-        },
-        clear () {
-            this.$v.$reset()
-            this.password = ''
-            this.email = ''
-            this.formHasErrors = false
-        }
+    clear () {
+      this.$v.$reset()
+      this.password = ''
+      this.email = ''
+      this.formHasErrors = false
     }
   }
+}
 </script>
 
 <style>
