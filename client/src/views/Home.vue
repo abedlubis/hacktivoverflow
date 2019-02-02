@@ -14,7 +14,15 @@
 
       <div class="col-md-3 d-flex flex-column align-self-start">
         <WatchTag v-if="isLogin"> </WatchTag>
-        <Job class="mt-4"> </Job>
+        <b-card class="mt-2">
+          <h6 slot="header"
+              class="mb-0">
+              Job for you
+          </h6>
+          <div class="text-xs-left">
+            <Job> </Job>
+          </div>
+        </b-card>
       </div>
     </div>
     <v-btn
@@ -45,7 +53,8 @@ export default {
     ...mapState([
       'questions',
       'isLogin',
-      'myWatchs'
+      'myWatchs',
+      'jobs'
     ])
   },
   components: {
@@ -56,12 +65,16 @@ export default {
     Job
   },
   created () {
-    this.checkLogin()
-    this.fetchQuestions()
+
   },
   mounted () {
     this.fetchMyWatchTag()
+    this.checkLogin()
+    this.fetchQuestions()
+    this.getJobFromAPI()
+    // this.fetchJobStreet('gang')
   },
+
   data () {
     return {
       dialog: false,
@@ -71,13 +84,17 @@ export default {
   watch: {
     questions (newVal) {
       this.allquestions = newVal
+    },
+    myWatchs (newVal) {
+      this.getJobFromAPI()
     }
   },
   methods: {
     ...mapActions([
       'fetchQuestions',
       'fetchMyWatchTag',
-      'checkLogin'
+      'checkLogin',
+      'fetchJobStreet'
     ]),
     onChangeDialog (data) {
       this.dialog = data
@@ -95,8 +112,15 @@ export default {
       })
       var magic = Array.from(new Set(temp))
       this.allquestions = magic
+    },
+    getJobFromAPI () {
+      var length = this.myWatchs.length
+      var indexWatch = Math.floor(Math.random() * Math.floor(length))
+      console.log(this.myWatchs[indexWatch], 'data yg di cari')
+      // this.fetchJobStreet(this.myWatchs)
     }
   }
+
 }
 </script>
 

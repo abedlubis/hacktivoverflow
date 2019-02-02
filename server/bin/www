@@ -15,7 +15,7 @@ var {nodemailer} = require('../helpers/index')
  * Get port from environment and store in Express.
  */
 
-kue.app.listen(4001)
+kue.app.listen(4000)
 queue.process('email', function (job, done) {
   nodemailer(job.data.email, { header: job.data.title, main: job.data.template }, done)
 })

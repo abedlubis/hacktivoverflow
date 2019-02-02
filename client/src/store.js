@@ -379,14 +379,16 @@ export default new Vuex.Store({
         })
     },
     fetchJobStreet ({ commit }, payload) {
-      console.log(payload)
-      var keywoard = ''
-      if (payload.length > 0) {
-        var indexMe = Math.floor(Math.random() * Math.floor(payload.length))
-        keywoard = payload[indexMe].name
-      }
+      // console.log(payload, 'data watch nya')
 
-      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${keywoard}`)
+      // if (payload.length > 0) {
+      //   console.log('masuk sini ga')
+      //   var indexMe = Math.floor(Math.random() * Math.floor(payload.length))
+      //   keywoard = payload[indexMe].name
+      //   console.log(keywoard, 'keywoardnya')
+      // }
+
+      axios.get(`https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json?description=${payload}`)
         .then(({ data }) => {
           console.log(data, 'job')
           commit('mutationJob', data)
